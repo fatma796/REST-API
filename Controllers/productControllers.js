@@ -11,7 +11,6 @@ const createProduct = async(req,res)=> {
 }
 
 
-
 const getProduct = async (req,res) => {
     try {
         const product = await Product.find()
@@ -23,22 +22,27 @@ const getProduct = async (req,res) => {
 }
 
 
-
 const updateProduct = async (req, res) => {
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(req.params.id);
-        res.status(201).json({ msg: "Product updated successfully", product: updatedProduct });
-        if (!updatedProduct) 
-            return res.status(404).json({ msg: "Product not found" });
+        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!product) return res.status(404).json({ msg: "Product not found" });
+        res.status(201).json({ msg: "Product updated", product });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
-}
+};
+
+
+const deleteProduct = async (req, res) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (!product) return res.status(404).json({ msg: "Product not found" });
+        res.status(201).json({ msg: "Product deleted" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
 
 
 
-
-
-module.exports = {createProduct}
-module.exports = {getProduct}
-module.exports = {updateProduct}
+module.exports = {createProduct , getProduct , updateProduct , deleteProduct}
